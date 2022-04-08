@@ -30,6 +30,7 @@ public class Sender {
         emailServerProperties.put("mail.smtp.auth", "true");
         emailServerProperties.put("mail.smtp.starttls.enable", "true");
         emailServerProperties.put("mail.smtp.ssl.trust", "*");
+        emailServerProperties.put("mail.smtp.ssl.protocols", "TLSv1.2");
         emailSession = Session.getDefaultInstance(emailServerProperties);
 
         // create mail message
