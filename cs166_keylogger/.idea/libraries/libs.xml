@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="libs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/activation-1.1.1.wso2v1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/javax.activation-1.2.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jnativehook-2.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
